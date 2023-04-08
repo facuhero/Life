@@ -1,9 +1,13 @@
 //let board = document.getElementById("board");
 const rows = 20;
-const columns = 20;
+const columns = 40;
 
-const cellOnClickHandler = () => {
-
+function cellOnClickHandler () {
+    if(this.className === 'alive'){
+        this.setAttribute("class","dead");
+        return;
+    }
+    this.setAttribute("class","alive");
 }
 
 const createBoard = () => {
@@ -19,7 +23,7 @@ const createBoard = () => {
         for(let j = 0; j < columns; j++){
             let cell = document.createElement("td");
             cell.setAttribute("id", i + "-" + j); 
-            cell.setAttribute("class", "live");
+            cell.setAttribute("class", "dead");
             cell.onclick = cellOnClickHandler;
             tr.appendChild(cell);
         }
