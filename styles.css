@@ -8,7 +8,6 @@
 
 td {
     border: 1px solid #000000;
-    /* border-radius: 3px; */
     width: 10px;
     height: 10px;
 }
@@ -21,4 +20,19 @@ td.dead {
 td.alive {
     background-color: #e2ff3e;
     /* border-radius: 4px; */
+}
+
+#start-button,
+#reset-button {
+    padding: .75em;
+    border-radius: 5px;
+    border: 1px solid black; 
+}
+
+#start-button:hover {
+    cursor: pointer;
+}
+
+#reset-button:hover {
+    cursor: pointer;
 }
