@@ -1,10 +1,9 @@
-//let board = document.getElementById("board");
-const rows = 40;
-const columns = 40;
+const rows = 10;
+const columns = 10;
 let isPlaying = false;
 let timer;
 let grid;
-let nextGen = [[]];
+let nextGen;
 
 function cellOnClickHandler() {
   var rowcol = this.id.split("-");
@@ -35,8 +34,10 @@ function startOnClickHandler() {
 function setupButtons(grid) {
   let startButton = document.getElementById("start-button");
   let resetButton = document.getElementById("reset-button");
+  let randomButton = document.getElementById("random-button");
   startButton.onclick = startOnClickHandler;
   resetButton.onclick = resetBoard;
+  randomButton.onclick = randomBoard;
 }
 
 const createBoard = () => {
@@ -51,7 +52,7 @@ const createBoard = () => {
 
   for (let i = 0; i < rows; i++) {
     let tr = document.createElement("tr");
-    nextGen[i] = new Array(rows)
+    nextGen[i] = new Array(rows);
     arr[i] = new Array(rows);
     for (let j = 0; j < columns; j++) {
       let cell = document.createElement("td");
@@ -66,74 +67,94 @@ const createBoard = () => {
   }
   boardContainer.appendChild(board);
   return arr;
-};
+}
 
 const resetBoard = () => {
+  clearTimeout(timer);
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < columns; j++) {
       cell = document.getElementById(i + "-" + j);
       cell.setAttribute("class", "dead");
       grid[i][j] = 0;
+      nextGen[i][j] = 0;
     }
   }
   isPlaying = false;
   console.log("Reset game!");
-};
+}
 
-const inicilize = () => {
+const randomBoard = () => {
+  if (isPlaying) return;
+  resetBoard();
+  for (var i = 0; i < rows; i++) {
+    for (var j = 0; j < columns; j++) {
+      var isLive = Math.round(Math.random());
+      if (isLive == 1) {
+        var cell = document.getElementById(i + "-" + j);
+        cell.setAttribute("class", "alive");
+        grid[i][j] = 1;
+      }
+    }
+  }
+}
+
+const inicialize = () => {
   grid = createBoard();
   setupButtons();
-};
+}
 
 const play = () => {
   //compute next gen
   grid = computeNextGen();
   //update view
-  updateView();
+  updateView(grid);
   if (isPlaying) {
-    timer = setTimeout(play, 500);
+    timer = setTimeout(play, 100);
   }
-};
+}
 
 function computeNextGen() {
-    for (var i = 0; i < rows; i++) {
-        for (var j = 0; j < columns; j++) {
-          let numNeighbors = countNeighbors(i, j);
-          let state = grid[i][j];
-    
-          if(state == 0 && numNeighbors == 3){
-            nextGen[i][j] = 1;
-          }else if(state == 1 && (numNeighbors < 2 || numNeighbors > 3)){
-            nextGen[i][j] = 0;
-          }else{
-            nextGen[i][j] = grid[i][j];
-          }
-        }
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < columns; j++) {
+      let numNeighbors = countNeighbors(i, j);
+      
+      let state = grid[i][j];
+
+      if (state == 0 && numNeighbors == 3) {
+        nextGen[i][j] = 1;
+      } else if (state == 1 && (numNeighbors < 2 || numNeighbors > 3)) {
+        nextGen[i][j] = 0;
+      } else {
+        nextGen[i][j] = state;
       }
-      return nextGen;
+      console.log(nextGen[i][j]);
+    }
+  }
+
+  return nextGen;
 }
 
 function countNeighbors(x, y) {
   let sum = 0;
-  for (var i = -1; i < 2; i++) {
-    for (var j = -1; j < 2; j++) {
-      let col = (x + i + columns) % columns;
-      let row = (y + j + rows) % rows;
+  for (let i = -1; i < 2; i++) {
+    for (let j = -1; j < 2; j++) {
+      let row = (x + i + rows) % rows;
+      let col = (y + j + columns) % columns;
       sum += grid[row][col];
     }
   }
   sum -= grid[x][y];
+  console.log("x: " + x + " y: " + y + " sum: " + sum);
   return sum;
 }
 
-function updateView() {
-
-  for (var i = 0; i < rows; i++) {
-    for (var j = 0; j < columns; j++) {
+function updateView(grid) {
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < columns; j++) {
       cell = document.getElementById(i + "-" + j);
       cell.setAttribute("class", grid[i][j] == 1 ? "alive" : "dead");
     }
   }
 }
 
-window.onload = inicilize;
+window.onload = inicialize;

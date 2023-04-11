@@ -23,16 +23,15 @@ td.alive {
 }
 
 #start-button,
-#reset-button {
+#reset-button,
+#random-button {
     padding: .75em;
     border-radius: 5px;
     border: 1px solid black; 
 }
 
-#start-button:hover {
+#start-button,#reset-button,
+#random-button:hover {
     cursor: pointer;
 }
 
-#reset-button:hover {
-    cursor: pointer;
-}
