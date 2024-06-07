@@ -1,31 +1,37 @@
-const ROW_SIZE = 40;
-const COLUMN_SIZE = 40;
+const ROW_SIZE = 20;
+const COLUMN_SIZE = 20;
 let isPlaying = false;
 let timer;
 let grid;
-let nextGen;
+let isMouseDown;
+
+const STATES = {
+  ALIVE: "alive",
+  DEAD: "dead",
+};
 
 function cellOnClickHandler() {
-  var rowcol = this.id.split("-");
-  var row = rowcol[0];
-  var col = rowcol[1];
+  let [row, col] = this.id.split("-");
 
-  if (this.className === "alive") {
-    this.setAttribute("class", "dead");
+  if (this.className === STATES.ALIVE) {
+    this.setAttribute("class", STATES.DEAD);
     grid[row][col] = 0;
     return;
   }
-  this.setAttribute("class", "alive");
+  this.setAttribute("class", STATES.ALIVE);
   grid[row][col] = 1;
 }
 
 function startOnClickHandler() {
   if (isPlaying) {
+    this.innerHTML = "Start";
     isPlaying = false;
     console.log("Stoping game!");
     clearTimeout(timer);
     return;
   }
+
+  this.innerHTML = "Stop";
   isPlaying = true;
   console.log("Playing game!");
   play();
@@ -43,7 +49,7 @@ function setupButtons() {
 const createBoard = () => {
   let boardContainer = document.getElementById("board");
   let arr = new Array(COLUMN_SIZE);
-  createNextGenGrid();
+
   if (!boardContainer) {
     throw Error("No board container");
   }
@@ -56,8 +62,9 @@ const createBoard = () => {
     for (let j = 0; j < ROW_SIZE; j++) {
       let cell = document.createElement("td");
       cell.setAttribute("id", i + "-" + j);
-      cell.setAttribute("class", "dead");
-      cell.onclick = cellOnClickHandler;
+      cell.setAttribute("class", STATES.DEAD);
+      cell.onmousedown = cellOnClickHandler;
+      cell.onmouseover = cellOnMouseOverHandler;
       tr.appendChild(cell);
       arr[i][j] = 0;
     }
@@ -72,12 +79,14 @@ const resetBoard = () => {
   for (let i = 0; i < COLUMN_SIZE; i++) {
     for (let j = 0; j < ROW_SIZE; j++) {
       cell = document.getElementById(i + "-" + j);
-      cell.setAttribute("class", "dead");
+      cell.setAttribute("class", STATES.DEAD);
       grid[i][j] = 0;
-      nextGen[i][j] = 0;
     }
   }
+
   isPlaying = false;
+  let startButton = document.getElementById("start-button");
+  startButton.innerHTML = "Start";
   console.log("Reset game!");
 };
 
@@ -89,7 +98,7 @@ const randomBoard = () => {
       var isLive = Math.round(Math.random());
       if (isLive == 1) {
         var cell = document.getElementById(i + "-" + j);
-        cell.setAttribute("class", "alive");
+        cell.setAttribute("class", STATES.ALIVE);
         grid[i][j] = 1;
       }
     }
@@ -107,12 +116,12 @@ const play = () => {
   //update view
   updateView(grid);
   if (isPlaying) {
-    timer = setTimeout(play, 100);
+    timer = setTimeout(play, 300);
   }
 };
 
 function computeNextGen() {
-  createNextGenGrid();
+  let nextGen = createNextGenGrid();
   for (let i = 0; i < COLUMN_SIZE; i++) {
     for (let j = 0; j < ROW_SIZE; j++) {
       let numNeighbors = countNeighbors(i, j);
@@ -149,16 +158,30 @@ function updateView(grid) {
   for (let i = 0; i < COLUMN_SIZE; i++) {
     for (let j = 0; j < ROW_SIZE; j++) {
       cell = document.getElementById(i + "-" + j);
-      cell.setAttribute("class", grid[i][j] == 1 ? "alive" : "dead");
+      cell.setAttribute("class", grid[i][j] == 1 ? STATES.ALIVE : STATES.DEAD);
     }
   }
 }
 
 function createNextGenGrid() {
-  nextGen = new Array(COLUMN_SIZE);
+  let nextGen = new Array(COLUMN_SIZE);
 
   for (let i = 0; i < COLUMN_SIZE; i++) {
     nextGen[i] = new Array(ROW_SIZE).fill(0);
+  }
+  return nextGen;
+}
+
+document.body.onmousedown = () => {
+  isMouseDown = true;
+};
+document.body.onmouseup = () => {
+  isMouseDown = false;
+};
+
+function cellOnMouseOverHandler() {
+  if (isMouseDown) {
+    cellOnClickHandler.call(this);
   }
 }
 
