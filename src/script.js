@@ -1,5 +1,5 @@
-const ROW_SIZE = 10;
-const COLUMN_SIZE = 10;
+const ROW_SIZE = 20;
+const COLUMN_SIZE = 20;
 let isPlaying = false;
 let timer;
 let grid;
@@ -31,7 +31,7 @@ function startOnClickHandler() {
   play();
 }
 
-function setupButtons(grid) {
+function setupButtons() {
   let startButton = document.getElementById("start-button");
   let resetButton = document.getElementById("reset-button");
   let randomButton = document.getElementById("random-button");
@@ -114,6 +114,12 @@ const play = () => {
 };
 
 function computeNextGen() {
+  nextGen = new Array(COLUMN_SIZE);
+
+  for (let i = 0; i < COLUMN_SIZE; i++) {
+    nextGen[i] = new Array(ROW_SIZE).fill(0);
+  }
+
   for (let i = 0; i < ROW_SIZE; i++) {
     for (let j = 0; j < COLUMN_SIZE; j++) {
       let numNeighbors = countNeighbors(i, j);
@@ -127,7 +133,6 @@ function computeNextGen() {
       } else {
         nextGen[i][j] = state;
       }
-      console.log(nextGen[i][j]);
     }
   }
 
@@ -138,13 +143,12 @@ function countNeighbors(x, y) {
   let sum = 0;
   for (let i = -1; i < 2; i++) {
     for (let j = -1; j < 2; j++) {
-      let row = (x + i + ROW_SIZE) % ROW_SIZE;
-      let col = (y + j + COLUMN_SIZE) % COLUMN_SIZE;
-      sum += grid[row][col];
+      let row = (y + j + ROW_SIZE) % ROW_SIZE;
+      let col = (x + i + COLUMN_SIZE) % COLUMN_SIZE;
+      sum += grid[col][row];
     }
   }
   sum -= grid[x][y];
-  console.log("x: " + x + " y: " + y + " sum: " + sum);
   return sum;
 }
 
