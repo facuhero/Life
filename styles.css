@@ -62,3 +62,8 @@ td.alive {
 #random-button:active {
   background-color: #3e8e41;
 }
+
+.slidecontainer {
+    display: flex;
+    justify-content: center;
+}

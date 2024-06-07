@@ -1,9 +1,11 @@
 const ROW_SIZE = 20;
 const COLUMN_SIZE = 20;
+const MIN_SPEED = 1000;
 let isPlaying = false;
 let timer;
 let grid;
 let isMouseDown;
+let speed = 300; //default speed in miliseconds
 
 const STATES = {
   ALIVE: "alive",
@@ -41,9 +43,13 @@ function setupButtons() {
   let startButton = document.getElementById("start-button");
   let resetButton = document.getElementById("reset-button");
   let randomButton = document.getElementById("random-button");
+  let speedSlider = document.getElementById("speedSlider");
   startButton.onclick = startOnClickHandler;
   resetButton.onclick = resetBoard;
   randomButton.onclick = randomBoard;
+  speedSlider.oninput = (event) => {
+    speed = MIN_SPEED - event.target.value;
+  };
 }
 
 const createBoard = () => {
@@ -116,7 +122,7 @@ const play = () => {
   //update view
   updateView(grid);
   if (isPlaying) {
-    timer = setTimeout(play, 300);
+    timer = setTimeout(play, speed);
   }
 };
 
