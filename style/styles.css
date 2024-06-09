@@ -78,3 +78,7 @@ td.alive {
   margin: 14px;
 }
 
+.controllers {
+  display: grid;
+  place-content: center;
+}
