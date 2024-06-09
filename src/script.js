@@ -1,5 +1,8 @@
-let ROW_SIZE = 20;
-let COLUMN_SIZE = 20;
+let parsedRowSize = parseInt(document.getElementById("row-size").value);
+let ROW_SIZE = isNaN(parsedRowSize) ? 20 : parsedRowSize;
+let parsedColSize = parseInt(document.getElementById("column-size").value);
+let COLUMN_SIZE = isNaN(parsedColSize) ? 20 : parsedColSize;
+console.log(ROW_SIZE, COLUMN_SIZE)
 const MIN_SPEED = 1000; //time in miliseconds
 let isPlaying = false;
 let timer;
@@ -185,7 +188,7 @@ function resizeBoard() {
   let newRow = parseInt(document.getElementById("row-size").value);
   let newCol = parseInt(document.getElementById("column-size").value);
 
-  if (newCol > 0 && newRow > 0) {
+  if (newCol > 0 && newCol < 101 && newRow > 0 && newRow < 101) {
     ROW_SIZE = newRow;
     COLUMN_SIZE = newCol;
     initialize();
