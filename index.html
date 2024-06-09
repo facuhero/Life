@@ -10,31 +10,31 @@
     <div id="board">
       <!-- board in javaScript -->
     </div>
+    
+      <div class="buttons">
+        <button id="start-button">Start</button>
+        <button id="reset-button">Reset</button>
+        <button id="random-button">Random</button>
+      </div>
+      <div class="slidecontainer">
+        <p id="speed-text"><b>Speed: </b></p>
+        <input
+          type="range"
+          min="1"
+          max="1000"
+          value="301"
+          class="slider"
+          id="speedSlider"
+        />
+      </div>
 
-    <div class="buttons">
-      <button id="start-button">Start</button>
-      <button id="reset-button">Reset</button>
-      <button id="random-button">Random</button>
-    </div>
-    <div class="slidecontainer">
-      <p id="speed-text"><b>Speed: </b></p>
-      <input
-        type="range"
-        min="1"
-        max="1000"
-        value="301"
-        class="slider"
-        id="speedSlider"
-      />
-    </div>
-
-    <div class="row-column-container">
-      <label for="row-size">Rows:</label>
-      <input type="number" id="row-size" min="1" value="20" />
-      <label for="column-size">Columns:</label>
-      <input type="number" id="column-size" min="1" value="20" />
-      <button id="resize-button">Resize</button>
-    </div>
+      <div class="row-column-container">
+        <label for="row-size">Rows:</label>
+        <input type="number" id="row-size" min="1" value="20" />
+        <label for="column-size">Columns:</label>
+        <input type="number" id="column-size" min="1" value="20" />
+        <button id="resize-button">Resize</button>
+      </div>
 
     <script src="/src/script.js"></script>
   </body>

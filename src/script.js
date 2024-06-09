@@ -1,8 +1,8 @@
-let parsedRowSize = parseInt(document.getElementById("row-size").value);
-let ROW_SIZE = isNaN(parsedRowSize) ? 20 : parsedRowSize;
 let parsedColSize = parseInt(document.getElementById("column-size").value);
 let COLUMN_SIZE = isNaN(parsedColSize) ? 20 : parsedColSize;
-console.log(ROW_SIZE, COLUMN_SIZE)
+let parsedRowSize = parseInt(document.getElementById("row-size").value);
+let ROW_SIZE = isNaN(parsedRowSize) ? 20 : parsedRowSize;
+
 const MIN_SPEED = 1000; //time in miliseconds
 let isPlaying = false;
 let timer;
@@ -60,7 +60,7 @@ function setupButtons() {
 const createBoard = () => {
   let boardContainer = document.getElementById("board");
   boardContainer.innerHTML = ""; // Clear previous board
-  let arr = new Array(COLUMN_SIZE);
+  let arr = new Array(ROW_SIZE);
 
   if (!boardContainer) {
     throw Error("No board container");
@@ -68,10 +68,10 @@ const createBoard = () => {
 
   let board = document.createElement("table");
 
-  for (let i = 0; i < COLUMN_SIZE; i++) {
+  for (let i = 0; i < ROW_SIZE; i++) {
     let tr = document.createElement("tr");
-    arr[i] = new Array(ROW_SIZE);
-    for (let j = 0; j < ROW_SIZE; j++) {
+    arr[i] = new Array(COLUMN_SIZE);
+    for (let j = 0; j < COLUMN_SIZE; j++) {
       let cell = document.createElement("td");
       cell.setAttribute("id", i + "-" + j);
       cell.setAttribute("class", STATES.DEAD);
@@ -88,8 +88,8 @@ const createBoard = () => {
 
 const resetBoard = () => {
   clearTimeout(timer);
-  for (let i = 0; i < COLUMN_SIZE; i++) {
-    for (let j = 0; j < ROW_SIZE; j++) {
+  for (let i = 0; i < ROW_SIZE; i++) {
+    for (let j = 0; j < COLUMN_SIZE; j++) {
       cell = document.getElementById(i + "-" + j);
       cell.setAttribute("class", STATES.DEAD);
       grid[i][j] = 0;
@@ -105,8 +105,8 @@ const resetBoard = () => {
 const randomBoard = () => {
   if (isPlaying) return;
   resetBoard();
-  for (var i = 0; i < COLUMN_SIZE; i++) {
-    for (var j = 0; j < ROW_SIZE; j++) {
+  for (var i = 0; i < ROW_SIZE; i++) {
+    for (var j = 0; j < COLUMN_SIZE; j++) {
       var isLive = Math.round(Math.random());
       if (isLive == 1) {
         var cell = document.getElementById(i + "-" + j);
@@ -134,8 +134,8 @@ const play = () => {
 
 function computeNextGen() {
   let nextGen = createNextGenGrid();
-  for (let i = 0; i < COLUMN_SIZE; i++) {
-    for (let j = 0; j < ROW_SIZE; j++) {
+  for (let i = 0; i < ROW_SIZE; i++) {
+    for (let j = 0; j < COLUMN_SIZE; j++) {
       let numNeighbors = countNeighbors(i, j);
 
       let state = grid[i][j];
@@ -157,9 +157,9 @@ function countNeighbors(x, y) {
   let sum = 0;
   for (let i = -1; i < 2; i++) {
     for (let j = -1; j < 2; j++) {
-      let row = (y + j + ROW_SIZE) % ROW_SIZE;
-      let col = (x + i + COLUMN_SIZE) % COLUMN_SIZE;
-      sum += grid[col][row];
+      let row = (x + i + ROW_SIZE) % ROW_SIZE;
+      let col = (y + j + COLUMN_SIZE) % COLUMN_SIZE;
+      sum += grid[row][col];
     }
   }
   sum -= grid[x][y];
@@ -167,8 +167,8 @@ function countNeighbors(x, y) {
 }
 
 function updateView(grid) {
-  for (let i = 0; i < COLUMN_SIZE; i++) {
-    for (let j = 0; j < ROW_SIZE; j++) {
+  for (let i = 0; i < ROW_SIZE; i++) {
+    for (let j = 0; j < COLUMN_SIZE; j++) {
       cell = document.getElementById(i + "-" + j);
       cell.setAttribute("class", grid[i][j] == 1 ? STATES.ALIVE : STATES.DEAD);
     }
@@ -176,10 +176,10 @@ function updateView(grid) {
 }
 
 function createNextGenGrid() {
-  let nextGen = new Array(COLUMN_SIZE);
+  let nextGen = new Array(ROW_SIZE);
 
-  for (let i = 0; i < COLUMN_SIZE; i++) {
-    nextGen[i] = new Array(ROW_SIZE).fill(0);
+  for (let i = 0; i < ROW_SIZE; i++) {
+    nextGen[i] = new Array(COLUMN_SIZE).fill(0);
   }
   return nextGen;
 }
@@ -189,8 +189,8 @@ function resizeBoard() {
   let newCol = parseInt(document.getElementById("column-size").value);
 
   if (newCol > 0 && newCol < 101 && newRow > 0 && newRow < 101) {
-    ROW_SIZE = newRow;
     COLUMN_SIZE = newCol;
+    ROW_SIZE = newRow;
     initialize();
   }
 }
@@ -207,7 +207,5 @@ function cellOnMouseOverHandler() {
     cellOnClickHandler.call(this);
   }
 }
-
-function rowResizingHandler() {}
 
 window.onload = initialize;
