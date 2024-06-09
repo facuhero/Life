@@ -1,11 +1,11 @@
-const ROW_SIZE = 20;
-const COLUMN_SIZE = 20;
-const MIN_SPEED = 1000;
+let ROW_SIZE = 20;
+let COLUMN_SIZE = 20;
+const MIN_SPEED = 1000; //time in miliseconds
 let isPlaying = false;
 let timer;
 let grid;
 let isMouseDown;
-let speed = 300; //default speed in miliseconds
+let speed = MIN_SPEED - document.getElementById("speedSlider").value; //default speed in miliseconds
 
 const STATES = {
   ALIVE: "alive",
@@ -44,16 +44,19 @@ function setupButtons() {
   let resetButton = document.getElementById("reset-button");
   let randomButton = document.getElementById("random-button");
   let speedSlider = document.getElementById("speedSlider");
+  let resizeButton = document.getElementById("resize-button");
   startButton.onclick = startOnClickHandler;
   resetButton.onclick = resetBoard;
   randomButton.onclick = randomBoard;
   speedSlider.oninput = (event) => {
     speed = MIN_SPEED - event.target.value;
   };
+  resizeButton.onclick = resizeBoard;
 }
 
 const createBoard = () => {
   let boardContainer = document.getElementById("board");
+  boardContainer.innerHTML = ""; // Clear previous board
   let arr = new Array(COLUMN_SIZE);
 
   if (!boardContainer) {
@@ -111,7 +114,7 @@ const randomBoard = () => {
   }
 };
 
-const inicialize = () => {
+const initialize = () => {
   grid = createBoard();
   setupButtons();
 };
@@ -178,6 +181,17 @@ function createNextGenGrid() {
   return nextGen;
 }
 
+function resizeBoard() {
+  let newRow = parseInt(document.getElementById("row-size").value);
+  let newCol = parseInt(document.getElementById("column-size").value);
+
+  if (newCol > 0 && newRow > 0) {
+    ROW_SIZE = newRow;
+    COLUMN_SIZE = newCol;
+    initialize();
+  }
+}
+
 document.body.onmousedown = () => {
   isMouseDown = true;
 };
@@ -191,4 +205,6 @@ function cellOnMouseOverHandler() {
   }
 }
 
-window.onload = inicialize;
+function rowResizingHandler() {}
+
+window.onload = initialize;
