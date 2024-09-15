@@ -31,14 +31,12 @@ function startOnClickHandler() {
   if (isPlaying) {
     this.innerHTML = "Start";
     isPlaying = false;
-    console.log("Stoping game!");
     clearTimeout(timer);
     return;
   }
 
   this.innerHTML = "Stop";
   isPlaying = true;
-  console.log("Playing game!");
   play();
 }
 
@@ -99,7 +97,6 @@ const resetBoard = () => {
   isPlaying = false;
   let startButton = document.getElementById("start-button");
   startButton.innerHTML = "Start";
-  console.log("Reset game!");
 };
 
 const randomBoard = () => {
